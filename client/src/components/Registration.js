@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 
 const nricRegex = /^[STGF]\d{7}[A-Z]$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+
 
 function Registration() {
   const [formData, setFormData] = useState({
+    username: '',
+    password: '',
     nric: '',
     firstName: '',
     lastName: '',
@@ -30,7 +34,10 @@ function Registration() {
     const dobDate = new Date(formData.dob);
     const todayDate = new Date();
 
-    if (!nricRegex.test(formData.nric)) {
+    if (!passwordRegex.test(formData.password)) {
+      setError('Password must be at least 6 characters long and contain both letters and numbers.');
+      return;
+    } else if (!nricRegex.test(formData.nric)) {
       setError('Invalid NRIC format! Please enter a valid NRIC.');
       return;
     } else if (dobDate > todayDate) {
@@ -46,6 +53,30 @@ function Registration() {
     <div className="registration-container">
       <h2>Registration Form</h2>
       <form onSubmit={handleSubmit}>
+        {/* Username Field */}
+        <div>
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        {/* Password Field */}
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
         {/* NRIC Field */}
         <div>
           <label htmlFor="nric">NRIC</label>
