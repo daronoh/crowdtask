@@ -1,6 +1,6 @@
 const express = require('express');
 const bcrypt = require("bcrypt");
-const { User } = require("../models/userModel");
+const User = require("../models/userModel");
 const isAuth = require('../middleware/auth');
 
 const router = express.Router();
@@ -28,10 +28,9 @@ router.post("/register", async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
-
     const user = await User.create({
       username,
-      encryptedPassword,
+      password: encryptedPassword,
       nric,
       firstName,
       lastName,
@@ -43,7 +42,7 @@ router.post("/register", async (req, res) => {
     res.status(201).json(user);
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
-      return res.status(409).json({ message: 'Duplicate entry: Username or NRIC already exists' });
+      return res.status(409).json({ message: 'Username or NRIC already exists' });
     }
     console.error('Error registering user:', err);
     res.status(500).json({ message: 'Error registering user' });

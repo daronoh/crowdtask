@@ -25,7 +25,7 @@ const User = sequelize.define('User', {
     allowNull: false
   },
   dob: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: false
   },
   address: {
@@ -43,7 +43,7 @@ const User = sequelize.define('User', {
 
 User.prototype.generateAuthToken = function () {
   const payload = { username: this.username };
-  const secretKey = process.env.JWT_SECRET_KEY;
+  const secretKey = process.env.SECRET_KEY;
   const options = { expiresIn: '1h' };
 
   return jwt.sign(payload, secretKey, options);
