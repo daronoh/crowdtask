@@ -1,7 +1,9 @@
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
-const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('./config/db');
+const User = require('./models/userModel');
+const userRoute = require('./routes/user_route');
 
 const app = express();
 const port = process.env.PORT;
@@ -12,27 +14,22 @@ const corsOptions = {
   optionSuccessStatus:200,
 }
 
-const sequelize = new Sequelize({
-  dialect: 'postgres',
-  host: process.env.PG_HOST,
-  username: process.env.PG_USER,
-  password: process.env.PG_PASSWORD,
-  database: process.env.PG_DB,
-  port: process.env.PG_PORT || 5432, 
-});
-
-sequelize.authenticate()
-  .then(() => {
-    console.log('Connected to PostgreSQL with Sequelize');
-  })
-  .catch(err => {
-    console.error('Error connecting to PostgreSQL:', err.stack);
-  });
 
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use("/users", userRoute);
+
+sequelize.sync({force: false})
+  .then(() => {
+    console.log('User model synced successfully');
+  })
+  .catch(err => {
+    console.error('Error syncing the User model:', err);
+  });
 
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 })
+
+module.exports = sequelize;
