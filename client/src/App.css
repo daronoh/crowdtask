@@ -26,10 +26,6 @@
   background-color: #f9f9f9;
 }
 
-h2 {
-  text-align: center;
-}
-
 form div {
   margin-bottom: 15px;
 }
@@ -41,12 +37,14 @@ label {
 }
 
 input[type="text"], input[type="date"], textarea {
-  width: 100%;
+  width: 80%;
   padding: 8px;
   margin-top: 5px;
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  border-radius: 10px;
+  text-align: center;
 }
 
 textarea {
@@ -67,4 +65,18 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.radiogroup label {
+  display: inline;
+  margin-right: 15px;
+}
+
+.error-box {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
 }

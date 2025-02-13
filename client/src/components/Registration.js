@@ -1,25 +1,44 @@
 import React, { useState } from 'react'
 
+const nricRegex = /^[STGF]\d{7}[A-Z]$/;
+
 function Registration() {
   const [formData, setFormData] = useState({
-    NRIC: '',
+    nric: '',
     firstName: '',
     lastName: '',
     dob: '',
     address: '',
     gender: ''
   });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const newValue = name === 'nric' ? value.toUpperCase() : value;
+    setError('');
+    
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: newValue,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const dobDate = new Date(formData.dob);
+    const todayDate = new Date();
+
+    if (!nricRegex.test(formData.nric)) {
+      setError('Invalid NRIC format! Please enter a valid NRIC.');
+      return;
+    } else if (dobDate > todayDate) {
+      setError('Date of Birth cannot be in the future!');
+      return;
+    }
+
+    setError('');
     console.log('Form submitted with data:', formData);
   };
 
@@ -94,40 +113,48 @@ function Registration() {
         {/* Gender Field */}
         <div>
           <label>Gender</label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="Male"
-              checked={formData.gender === 'Male'}
-              onChange={handleChange}
-            />
-            Male
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="Female"
-              checked={formData.gender === 'Female'}
-              onChange={handleChange}
-            />
-            Female
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="Other"
-              checked={formData.gender === 'Other'}
-              onChange={handleChange}
-            />
-            Other
-          </label>
+          <div className='radiogroup'>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Male"
+                checked={formData.gender === 'Male'}
+                onChange={handleChange}
+              />
+              Male
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Female"
+                checked={formData.gender === 'Female'}
+                onChange={handleChange}
+              />
+              Female
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                value="Other"
+                checked={formData.gender === 'Other'}
+                onChange={handleChange}
+              />
+              Other
+            </label>
+          </div>
         </div>
 
         <button type="submit">Register</button>
       </form>
+      {/* Error Box */}
+      {error && (
+        <div className="error-box">
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   );
 };
