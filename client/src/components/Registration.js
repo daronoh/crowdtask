@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 
 const nricRegex = /^[STGF]\d{7}[A-Z]$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
@@ -50,7 +51,7 @@ function Registration() {
   };
 
   return (
-    <div className="registration-container">
+    <div className="form-container">
       <h2>Registration Form</h2>
       <form onSubmit={handleSubmit}>
         {/* Username Field */}
@@ -132,7 +133,8 @@ function Registration() {
         {/* Address Field */}
         <div>
           <label htmlFor="address">Address</label>
-          <textarea
+          <input
+            type="text"
             id="address"
             name="address"
             value={formData.address}
@@ -178,7 +180,11 @@ function Registration() {
           </div>
         </div>
 
-        <button type="submit">Register</button>
+        <button type="submit" className='submit-button' style={{marginBottom: '10px'}}>Register</button>
+        <Link to="/login">
+          <button className='navButton'>Go to Login Page</button>
+        </Link>
+        
       </form>
       {/* Error Box */}
       {error && (
