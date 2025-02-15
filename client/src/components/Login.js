@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../context/AuthProvider';
 
 function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   })
   const [error, setError] = useState('');
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setError('');
@@ -18,11 +22,22 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError('');
-    console.log('Form submitted with data:', formData);
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/login`, { formData });
+      const { token, user } = response.data;
+      login(user.username, token);
+      setError('');
+      navigate('/user');
+    } catch (err) {
+      if (err.status === 401) {
+        setError(`${err.response.data.message}`);
+      } else {
+        setError('Unknown error occurred');
+      }
+    }
   };
 
   return (
@@ -54,7 +69,7 @@ function Login() {
           />
         </div>
         <button type="submit" className='submit-button' style={{marginBottom: '10px'}}>Login</button>
-        <Link to="/">
+        <Link to="/register">
           <button className='navButton'>Go to Registration Page</button>
         </Link>
       </form>

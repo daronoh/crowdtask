@@ -20,15 +20,18 @@ describe('POST /register', () => {
     const response = await request(app)
       .post('/users/register')
       .send({
-        username: 'new_user',
-        password: 'newpassword123',
-        nric: 'S1234567A',
-        firstName: 'New',
-        lastName: 'User',
-        dob: '1990-01-01',
-        address: '123 Test St',
-        gender: 'Male',
-      })
+        "formData": {
+          "username": "new_user",
+          "password": "newpassword123",
+          "nric": "S1234567A",
+          "firstName": "New",
+          "lastName": "User",
+          "dob": "1990-01-01",
+          "address": "123 Test St",
+          "gender": "Male"
+        }
+      }
+      )
       .expect(201);
 
     const user = await User.findOne({ where: { username: 'new_user' } });
@@ -51,14 +54,16 @@ describe('POST /register', () => {
     const response = await request(app)
       .post('/users/register')
       .send({
-        username: 'new_user',
-        password: 'password123',
-        nric: 'S1234567B',
-        firstName: 'Existing',
-        lastName: 'User',
-        dob: '1990-01-01',
-        address: '123 Test St',
-        gender: 'Female',
+        "formData": {
+          "username": "new_user",
+          "password": "newpassword123",
+          "nric": "S1234567B",
+          "firstName": "New",
+          "lastName": "User",
+          "dob": "1990-01-01",
+          "address": "123 Test St",
+          "gender": "Male"
+        }
       })
       .expect(409);
 
@@ -80,14 +85,16 @@ describe('POST /register', () => {
     const response = await request(app)
       .post('/users/register')
       .send({
-        username: 'test_user',
-        password: 'password123',
-        nric: 'S1234567A',
-        firstName: 'Existing',
-        lastName: 'User',
-        dob: '1990-01-01',
-        address: '123 Test St',
-        gender: 'Female',
+        "formData": {
+          "username": "test_user",
+          "password": "newpassword123",
+          "nric": "S1234567A",
+          "firstName": "New",
+          "lastName": "User",
+          "dob": "1990-01-01",
+          "address": "123 Test St",
+          "gender": "Male",
+        }
       })
       .expect(409);
 

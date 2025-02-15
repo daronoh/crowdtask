@@ -2,9 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Registration from './components/Registration';
 import Login from './components/Login';
+import ProtectedRoute from './components/ProtectedRoute';
+import UserDashboard from './components/UserDashboard';
 
 const router = createBrowserRouter([
   {
@@ -13,11 +15,25 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/", 
+        element: <Login/>
+      },
+      {
+        path: "/register",
         element: <Registration/>
       },
       {
-        path: "/login",
-        element: <Login/>
+        path: "/user",
+        element: (
+          <ProtectedRoute>
+            <Outlet/>
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            path: "/user",
+            element: <UserDashboard/>
+          }
+        ]
       }
     ]
   }

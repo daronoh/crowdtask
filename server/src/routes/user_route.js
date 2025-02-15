@@ -5,14 +5,15 @@ const isAuth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get("/:username", isAuth, async (req, res) => {
+router.get("/dashboard", isAuth, async (req, res) => {
   try {
+    console.log("getting user data");
     const user = await User.findOne({
-      where: {username: req.params.username}
+      where: {username: req.user.username}
     });
 
     if (!user) {
-      res.status(404).json({ message: 'username does not exist' });
+      res.status(404).json({ message: 'Username does not exist' });
     }
 
     res.status(200).json(user);
@@ -24,10 +25,11 @@ router.get("/:username", isAuth, async (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const { username, password, nric, firstName, lastName, dob, address, gender } = req.body;
+    console.log(req.body);
+    const { username, password, nric, firstName, lastName, dob, address, gender } = req.body.formData;
 
-    const salt = await bcrypt.genSalt(10);
-    const encryptedPassword = await bcrypt.hash(password, salt);
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    
     const user = await User.create({
       username,
       password: encryptedPassword,
@@ -39,7 +41,9 @@ router.post("/register", async (req, res) => {
       gender,
     });
 
-    res.status(201).json(user);
+    const token = user.generateAuthToken();
+
+    res.status(201).json({ token, user });
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(409).json({ message: 'Username or NRIC already exists' });
@@ -50,24 +54,24 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body.formData;
 
   try {
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
-      return res.status(404).json({ message: "username not found!" });
+      return res.status(401).json({ message: "Wrong Username or Password!" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Wrong password!" });
+      return res.status(401).json({ message: "Wrong Username or Password!" });
     }
 
     const token = user.generateAuthToken();
 
-    return res.json({ token });
+    return res.json({ token, user });
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ message: "Internal server error" });

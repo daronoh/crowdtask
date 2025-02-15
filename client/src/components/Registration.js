@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../context/AuthProvider';
 
 const nricRegex = /^[STGF]\d{7}[A-Z]$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
 
 
 function Registration() {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -17,6 +20,7 @@ function Registration() {
     gender: ''
   });
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +33,7 @@ function Registration() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const dobDate = new Date(formData.dob);
@@ -46,8 +50,20 @@ function Registration() {
       return;
     }
 
-    setError('');
-    console.log('Form submitted with data:', formData);
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/register`, { formData });
+      const { token, user } = response.data;
+      login(user.username, token);
+      setError('');
+      navigate('/user');
+    } catch (err) {
+      if (err.status === 409) {
+        console.log(err.response.data);
+        setError(`Error during registration: ${err.response.data.message}`);
+      } else {
+        setError('Unknown error occurred');
+      }
+    }
   };
 
   return (
@@ -181,7 +197,7 @@ function Registration() {
         </div>
 
         <button type="submit" className='submit-button' style={{marginBottom: '10px'}}>Register</button>
-        <Link to="/login">
+        <Link to="/">
           <button className='navButton'>Go to Login Page</button>
         </Link>
         
