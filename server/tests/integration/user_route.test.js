@@ -2,14 +2,11 @@ const request = require('supertest');
 const app = require('../../src/index');
 const User = require('../../src/models/userModel');
 const sequelize = require('../../src/config/db');
+const bcrypt = require('bcrypt');
 
 describe('POST /register', () => {
   beforeAll(async () => {
     await sequelize.sync({ force: false });
-  });
-  
-  afterAll(async () => {
-    await sequelize.close(); 
   });
 
   afterEach(async () => {
@@ -101,3 +98,78 @@ describe('POST /register', () => {
       expect(response.body.message).toBe('Username or NRIC already exists');
   });
 });
+
+describe('POST /login', () => {
+  beforeAll(async () => {
+    await sequelize.sync({ force: false });
+  });
+  
+  afterAll(async () => {
+    await sequelize.close(); 
+  });
+
+  afterEach(async () => {
+    await User.destroy({ where: { username: 'new_user', nric: 'S1234567A' } });
+  });
+
+  it('should login an existing user successfully', async () => {
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    await User.create({
+      username: 'new_user',
+      password: hashedPassword,
+      nric: 'S1234567A',
+      firstName: 'Existing',
+      lastName: 'User',
+      dob: '1990-01-01',
+      address: '123 Test St',
+      gender: 'Female',
+    });
+
+    await request(app)
+      .post('/users/login')
+      .send({
+        "formData": {
+          "username": "new_user",
+          "password": "password123",
+        }
+      }
+      )
+      .expect(200);
+  });
+
+  it('should reject incorrect login information', async () => {
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    await User.create({
+      username: 'new_user',
+      password: hashedPassword,
+      nric: 'S1234567A',
+      firstName: 'Existing',
+      lastName: 'User',
+      dob: '1990-01-01',
+      address: '123 Test St',
+      gender: 'Female',
+    });
+
+    await request(app)
+      .post('/users/login')
+      .send({
+        "formData": {
+          "username": "newuser",
+          "password": "password123",
+        }
+      }
+      )
+      .expect(401);
+
+      await request(app)
+      .post('/users/login')
+      .send({
+        "formData": {
+          "username": "new_user",
+          "password": "wrongpassword123",
+        }
+      }
+      )
+      .expect(401);
+  });
+})
