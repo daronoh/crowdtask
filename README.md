@@ -27,23 +27,6 @@ GovTech (CrowdTaskSG) Internship Assessment
 
 This project uses Docker and Docker Compose to run a full-stack application with a React frontend, a Node.js backend, and a PostgreSQL database. To ensure that your application runs correctly with the appropriate environment variables, you need to create a `.env` file in the root directory of your project.
 
-### Steps to Create a `.env` File
-1. **Navigate to the Root Directory**: Make sure you are in the root directory of the project where your `docker-compose.yml` file is located.
-
-2. **Create a .env File**: In the root directory, create a new file named `.env`.
-
-3. **Add Environment Variables**: Open the `.env` file in your IDE and add the following environment variables:
-```
-REACT_APP_API_URL="http://localhost:5001" # port has to match the SERVER_PORT
-SERVER_PORT=5001 # Or any other port you wish to use
-PG_USER=username # Your postgreSQL username
-PG_PASSWORD=password # Your postgreSQL password
-PG_DB=crowdtask # Your database name
-PG_HOST=postgres-db
-PG_PORT=5432
-SECRET_KEY=secret_key # Replace with your JWT secret key. Follow this instruction (https://dev.to/tkirwa/generate-a-random-jwt-secret-key-39j4) to obtain your JWT Secret Key
-```
-
 ## Getting Started
 
 ### Step 1: Clone the Repository
@@ -66,6 +49,23 @@ docker-compose up --build
 Once the containers are running, you can access the application in your web browser:
 - http://localhost:3000/
 
-## Step 5: Configure the docker-compose.yml file (Optional)
+### Step 5: Configure the docker-compose.yml file (Optional)
 If you would like to change any of the environment variables or container settings, you can do so
 in either the `docker-compose.yaml` file or the `.env` file
+
+## Steps to Create a `.env` File
+1. **Navigate to the Root Directory**: Make sure you are in the root directory of the project where your `docker-compose.yml` file is located.
+
+2. **Create a .env File**: In the root directory, create a new file named `.env`.
+
+3. **Add Environment Variables**: Open the `.env` file in your IDE and add the following environment variables:
+```
+REACT_APP_API_URL="http://localhost:5001" # port has to match the SERVER_PORT
+SERVER_PORT=5001 # Or any other port you wish to use
+PG_USER=username # Your postgreSQL username
+PG_PASSWORD=password # Your postgreSQL password
+PG_DB=crowdtask # Your database name
+PG_HOST=postgres-db
+PG_PORT=5432
+SECRET_KEY=secret_key # Replace with your JWT secret key. Follow this instruction (https://dev.to/tkirwa/generate-a-random-jwt-secret-key-39j4) to obtain your JWT Secret Key
+```
