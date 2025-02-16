@@ -36,24 +36,7 @@ Open your terminal and run the following command:
 git clone https://github.com/daronoh/crowdtask.git
 ```
 
-### Step 2: Open up Docker 
-Open up Docker and navigate to your project directory.
-
-### Step 3: Build and Start the Docker Containers
-Run the following command to build and start the Docker containers:
-```bash
-docker-compose up --build
-```
-
-### Step 4: Access the Application
-Once the containers are running, you can access the application in your web browser:
-- http://localhost:3000/
-
-### Step 5: Configure the docker-compose.yml file (Optional)
-If you would like to change any of the environment variables or container settings, you can do so
-in either the `docker-compose.yaml` file or the `.env` file
-
-## Steps to Create a `.env` File
+### Step 2: Create a .env file
 1. **Navigate to the Root Directory**: Make sure you are in the root directory of the project where your `docker-compose.yml` file is located.
 
 2. **Create a .env File**: In the root directory, create a new file named `.env`.
@@ -69,3 +52,21 @@ PG_HOST=postgres-db
 PG_PORT=5432
 SECRET_KEY=secret_key # Replace with your JWT secret key. Follow this instruction (https://dev.to/tkirwa/generate-a-random-jwt-secret-key-39j4) to obtain your JWT Secret Key
 ```
+
+### Step 3: Open up Docker 
+Open up Docker and navigate to your project directory.
+
+### Step 4: Build and Start the Docker Containers
+Run the following command to build and start the Docker containers:
+```bash
+docker-compose up --build
+```
+
+### Step 5: Access the Application
+Once the containers are running, you can access the application in your web browser:
+- http://localhost:3000/
+
+### Step 6: Configure the docker-compose.yml file (Optional)
+If you would like to change any of the environment variables or container settings, you can do so
+in either the `docker-compose.yaml` file or the `.env` file
+
