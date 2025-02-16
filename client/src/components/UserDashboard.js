@@ -16,12 +16,17 @@ function UserDashboard() {
         });
         setUserData(response.data);
       } catch (err) {
-        console.log("Error fetching user data:", err);
+        if (err.status === 401) {
+          console.log(err.response.data.message);
+          logout();
+        } else {
+          console.log("Error fetching user data:", err);
+        }
       }
     };
 
     fetchData();
-  }, [auth]);
+  }, [auth, logout]);
 
   const handleLogout = () => {
     logout();
