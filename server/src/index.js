@@ -6,7 +6,7 @@ const User = require('./models/userModel');
 const userRoute = require('./routes/user_route');
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.SERVER_PORT;
 
 const corsOptions = {
   origin:'*',
