@@ -1,6 +1,3 @@
-# CrowdTask
-GovTech (CrowdTaskSG) Internship Assessment
-
 ## Assumptions made about the Project
 1. NRIC follows the format \[S/T/G/F\]\[7 digits\]\[A-Z\]
 
